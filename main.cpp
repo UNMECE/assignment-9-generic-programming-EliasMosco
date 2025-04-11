@@ -1,5 +1,5 @@
 #include<iostream>
-
+#include<stdexcept>
 template <typename T>
 class GenericArray {
 
@@ -11,7 +11,7 @@ private:
     void resize() {
         capacity += 1;
         T* newData = new T[capacity];
-        for (int i = 0; i < size; ++i)
+        for (int i = 0; i < length; ++i)
             newData[i] = data[i];
         delete[] data;
         data = newData;
@@ -19,7 +19,7 @@ private:
 
 public:
     GenericArray(int initSize = 10)
-        : capacity(initSize), size(0) {
+        : capacity(initSize), length(0) {
         data = new T[capacity];
     }
 
@@ -28,20 +28,20 @@ public:
     }
 
     void addElement(const T& elem) {
-        if (size >= capacity)
+        if (length >= capacity)
             resize();
-        data[size++] = elem;
+        data[length++] = elem;
     }
     T sum(){
         T total = data[0];
-        for(int i=0; i < size; i++ ){
+        for(int i=0; i < length; i++ ){
             total += data[i];
         }
         return total;
     }
     T max(){
         T temp = data[0];
-        for(int i=0; i< size; i++){
+        for(int i=0; i< length; i++){
             if(data[i] > temp){
                 temp = data[i];
             }
@@ -50,7 +50,7 @@ public:
     }
     T min(){
         T min = data[0];
-        for(int i=0; i< size; i++){
+        for(int i=0; i< length; i++){
             if(data[i] < min){
                 min = data[i];
             }
@@ -58,7 +58,7 @@ public:
         return min;
     }
     T* slice(int start, int end){
-        if(start < 0 || end >= size){
+        if(start < 0 || end >= length){
             throw std::out_of_range("Slice out of bounds");
         }
         int new_length = end-start;
@@ -71,7 +71,8 @@ public:
         return temp;
     }
     T at(int location){
-        if (index < 0 || index >= length){throw std::out_of_range("Index out of bounds");}
+
+        if (location < 0 || location >= length){throw std::out_of_range("Index out of bounds");}
         return  data[location];
     }
     T getData(int index) const {
@@ -81,11 +82,11 @@ public:
     }
 
     int size() const {
-        return size;
+        return length;
     }
 
     void setData(int index, const T& value) {
-        if (index < 0 || index >= size)
+        if (index < 0 || index >= length)
             throw std::out_of_range("Index out of bounds");
         data[index] = value;
     }
@@ -112,6 +113,6 @@ int main(){
     std::cout << "sum of the array is " << int_array.sum() << std::endl;
     std::cout << "maximum and minimum of array is " << int_array.max() << "\t" << int_array.min() << std::endl;
     int *sliced_array = int_array.slice(3,6);
-    std::cout << " sliced array: "<< sliced_array <<  std::endl;
+    std::cout << " sliced array: [ "<< sliced_array[0] << ", " << sliced_array[1] << ", " << sliced_array[2] << " ]"<<  std::endl;
     
 }
